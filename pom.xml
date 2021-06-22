@@ -6,6 +6,8 @@
 
     <modules>
         <module>chapter01-HelloWorld</module>
+        <module>chapter02-crud</module>
+        <module>chapter03-annotation</module>
     </modules>
     <groupId>com.lft</groupId>
     <artifactId>springmvc</artifactId>

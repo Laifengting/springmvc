@@ -1,7 +1,7 @@
 package com.lft.springmvc.handler;
 
-import com.lft.springmvc.pojo.Address;
-import com.lft.springmvc.pojo.User;
+import com.lft.springmvc.entity.Address;
+import com.lft.springmvc.entity.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping ("springmvc")
-// @SessionAttributes (names = {"user"}, types = {String.class})
+@SessionAttributes (names = {"user"}, types = {String.class})
 public class HelloWorld {
     
     private static final String SUCCESS = "success";
@@ -211,8 +212,10 @@ public class HelloWorld {
      * 1. 原始数据：id=1,username=tom,password=123456,age=20,email=tom@qq.com,address={"江苏","南通"}
      * 2. 密码不能被个性
      * 3. 表单回显，模拟操作直接在表单填写对应的属性值
-     * @param map
-     * @return
+     * <p>
+     * 注解 @ModelAttribute 也可以用来修改目标方法的 POJO 类型的入参，其 value 或 name 属性值有如下作用：
+     * 1. SpirngMVC 会使用 value 或 name 属性值作为 key 在 implicitModel 中查找对应的对象，若存在则会直接传入到目标方法的入参中。
+     * 2. SpringMVC 会以 value 为 key，POJO 类型的对象为 value，存入到 request 中。
      */
     @RequestMapping ("testModelAttribute")
     public String testModelAttribute(@ModelAttribute ("user") User user) {
@@ -245,19 +248,19 @@ public class HelloWorld {
      * 源代码分析流程：
      * 1. 调用 @ModelAttribute 注解修改的方法。实际上是把 @ModelAttribute 方法中 Map 中的数据放到了 implicitModel 中。
      * 2. 解析请求处理器的目标参数，实际上该目标参数来乍于。WebDataBinder 对象的 target 属性。
-     * //   2.1 创建 WebDataBinder 对象
-     * //       2.1.1 确定 objectName 属性：
-     * //           2.1.1.1 若传入的 attrName 属性值为 ""，则 objectName 为类名第一个字母小写。
-     * //           2.1.1.2 ★ 注意：attrName 若目标方法的 POJO 属性使用了 @ModelAttribute 注解来修改，则 attrName 值即为 @ModelAttribute 属性 value 或 name 的值。
-     * //       2.1.2 确定 target 属性：
-     * //           2.1.2.1 在 implicitModel 中查找 attrName 对应的属性值。若存在，直接赋值给 objectName
-     * //           2.1.2.2 若不存在：则验证当前 Handler 是否使用了 @SessionAttributes 注解：
-     * //               2.1.2.2.1若使用了，则尝试从 Session 中获取 attrName 所对应的值。
-     * //               2.1.2.2.2 ★ 若 Session 中没有对应的属性值，则抛出异常。
-     * //           2.1.2.3 如果当前  Handler 没有使用 @SessionAttributes 注解，或者 @SessionAttributes 中没有键 attrName 对应的值。则通过反射创建 POJO 对象。
-     * //   2.2 SpringMVC 把表单的请求参数赋给了 WebDataBinder 的 target 对应的属性。
-     * //   2.3 ★ SpringMVC 会把 WebDataBinder 的 attrName 和 target 给到 implicitModel。从而传入 request 域对象中。
-     * //   2.4 把 WebDataBinder 的 target 作为参数传递给目标方法的入参。
+     * *   2.1 创建 WebDataBinder 对象
+     * *       2.1.1 确定 objectName 属性：
+     * *           2.1.1.1 若传入的 attrName 属性值为 ""，则 objectName 为类名第一个字母小写。
+     * *           2.1.1.2 ★ 注意：attrName 若目标方法的 POJO 属性使用了 @ModelAttribute 注解来修改，则 attrName 值即为 @ModelAttribute 属性 value 或 name 的值。
+     * *       2.1.2 确定 target 属性：
+     * *           2.1.2.1 在 implicitModel 中查找 attrName 对应的属性值。若存在，直接赋值给 objectName
+     * *           2.1.2.2 若不存在：则验证当前 Handler 是否使用了 @SessionAttributes 注解：
+     * *               2.1.2.2.1若使用了，则尝试从 Session 中获取 attrName 所对应的值。
+     * *               2.1.2.2.2 ★ 若 Session 中没有对应的属性值，则抛出异常。
+     * *           2.1.2.3 如果当前  Handler 没有使用 @SessionAttributes 注解，或者 @SessionAttributes 中没有键 attrName 对应的值。则通过反射创建 POJO 对象。
+     * *   2.2 SpringMVC 把表单的请求参数赋给了 WebDataBinder 的 target 对应的属性。
+     * *   2.3 ★ SpringMVC 会把 WebDataBinder 的 attrName 和 target 给到 implicitModel。从而传入 request 域对象中。
+     * *   2.4 把 WebDataBinder 的 target 作为参数传递给目标方法的入参。
      */
     @ModelAttribute
     public void getUser(@RequestParam (value = "id", required = false) Integer id, Map<String, Object> map) {
@@ -267,5 +270,35 @@ public class HelloWorld {
             map.put("user", user);
             System.out.println("从数据库中获取对象 " + user);
         }
+    }
+    
+    @RequestMapping ("testViewAndViewResolver")
+    public String testViewAndViewResolver() {
+        System.out.println("testViewAndViewResolver");
+        return SUCCESS;
+    }
+    
+    @RequestMapping ("testView")
+    public String testView() {
+        System.out.println("testView");
+        return "helloView";
+    }
+    
+    /**
+     * 转发
+     */
+    @RequestMapping ("testForward")
+    public String testForward() {
+        System.out.println("testForward");
+        return "forward:/index.jsp";
+    }
+    
+    /**
+     * 重定向
+     */
+    @RequestMapping ("testRedirect")
+    public String testRedirect() {
+        System.out.println("testRedirect");
+        return "redirect:/index.jsp";
     }
 }

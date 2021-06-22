@@ -16,23 +16,18 @@
 
     <!-- 配置 DispatcherServlet -->
     <servlet>
-        <servlet-name>springDispatcherServlet</servlet-name>
+        <servlet-name>springmvc</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <!-- 配置 DispatcherServlet 初始化参数，作用：配置 SpringMVC 配置文件的位置和名称 -->
-        <!--
-            实际上也可以不通过 contextConfigLocation 来配置 SpringMVC 的配置文件，而使用默认的。
-            默认的配置文件为：/WEB-INF/<servlet-name>-servlet.xml
-            springDispatcherServlet-servlet.xml
-        -->
-
-        <!--<init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value>classpath:WEB-INF/springmvc.xml</param-value>
-        </init-param>-->
-        <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>springDispatcherServlet</servlet-name>
+        <servlet-name>springmvc</servlet-name>
+        <!--
+        "/*"：拦截所有的请求，包括 JSP
+        "/"：拦截所有的请求，不包括 JSP
+        *.do：拦截 以 .do 结尾的请求
+        *.action：拦截 以 .action 结尾的请求
+        -->
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+
 </web-app>

@@ -1,4 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fm" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -106,5 +108,17 @@
             age: <input type="text" name="age" value="20"><br/>
             <input type="submit" value="提交">
         </form>
+
+        <%--<br/>--%>
+        <%--<fm:form action="register" method="post">--%>
+        <%--    <spring:message code="i18n.loginName"/>：<fm:input path="loginName"/><br/><br/>--%>
+        <%--    <spring:message code="i18n.password"/>：<fm:input path="password"/><br/><br/>--%>
+        <%--    <spring:message code="i18n.age"/>：<fm:input path="age"/><br/><br/>--%>
+        <%--    <spring:message code="i18n.email"/>：<fm:input path="email"/><br/><br/>--%>
+        <%--    <spring:message code="i18n.phone"/>：<fm:input path="phone"/><br/><br/>--%>
+        <%--    <input type="submit" value="<spring:message code="i18n.submit"/>">--%>
+        <%--</fm:form>--%>
+
+        <a href="/springmvc/testView">Test View</a>
     </body>
 </html>

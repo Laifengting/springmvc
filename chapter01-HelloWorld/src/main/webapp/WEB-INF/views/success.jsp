@@ -27,5 +27,9 @@
         request school : ${requestScope.school}<br/>
 
         session school : ${sessionScope.school}<br/>
+
+        <a href="/springmvc/testForward">Test Forward</a> <br/>
+        
+        <a href="/springmvc/testRedirect">Test Redirect</a> <br/>
     </body>
 </html>

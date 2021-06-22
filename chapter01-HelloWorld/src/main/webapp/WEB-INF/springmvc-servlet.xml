@@ -11,15 +11,37 @@
 	   http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
     <!-- SpringMVC 只是控制网站跳转逻辑 -->
     <!-- 配置包扫描路径 -->
+    <!-- 加上 @Controller 注解的类，作为 SpringMVC 的控制层 -->
     <context:component-scan base-package = "com.lft.springmvc"></context:component-scan>
 
     <!-- 配置视图解析器：如何把 Controller 方法返回值解析为实际的物理视图 -->
-    <bean id = ""
+    <bean id = "internalResourceViewResolver"
           class = "org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name = "prefix"
                   value = "/WEB-INF/views/"></property>
         <property name = "suffix"
                   value = ".jsp"></property>
     </bean>
+
+    <!-- 配置视图解析器 -->
+    <!-- 通过 order 属性来定义视图解析器的优先级，order 值越小优先级越高 -->
+    <bean id = "beanNameViewResolver"
+          class = "org.springframework.web.servlet.view.BeanNameViewResolver">
+        <property name = "order"
+                  value = "100"/>
+    </bean>
+
+    <!-- 配置国际化资源文件 -->
+    <bean id = "messageSource"
+          class = "org.springframework.context.support.ResourceBundleMessageSource">
+        <property name = "basename"
+                  value = "i18n"/>
+    </bean>
+
+    <!-- 配置直接转发的页面，可以直接响应转发的页面，而无需再经过 Handler 的方法。 -->
+    <mvc:view-controller path = "/success"
+                         view-name = "success"/>
+    <!-- 在实际开发中通常都需要配置 mvc:annotation-driven 标签 -->
+    <mvc:annotation-driven></mvc:annotation-driven>
 
 </beans>

@@ -1,4 +1,4 @@
-package com.lft.springmvc.pojo;
+package com.lft.springmvc.entity;
 
 public class User {
     
